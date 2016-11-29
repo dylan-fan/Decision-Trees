@@ -1,0 +1,39 @@
+
+# Import modules
+import arcpy, os, sys, string
+
+# Create envrionmental variables
+arcpy.env.overwriteOutput = True
+arcpy.env.workspace = r"home\hridam\Downloads\adult"    # This is the folder that contains the data
+
+# Set variables
+input = "adult.data"    # The zip code shapefile
+lyr = "test_layer"     # The name of the Make Feature Layer output
+
+# Processes to make feature layer...
+arcpy.MakeFeatureLayer_management(input, lyr)
+
+# Create the text file to write the zip values to...
+outFile = open(r"home\hridam\Downloads\ext.txt", "w")
+
+# Build search cursor for all 10.x...
+fcSearch = arcpy.SearchCursor(lyr, "", "", "ZIP")
+
+for fcRow in fcSearch:
+    # Create expression based on the current row's zip code value
+    exp = '"ZIP" = ' + "'" + str(fcRow.getValue("ZIP")) + "'"
+    # Process: Select Layer by Attribute...
+    arcpy.SelectLayerByAttribute_management(lyr, "NEW_SELECTION", exp)
+    # Process: Select Layer by Location...
+    arcpy.SelectLayerByLocation_management(lyr, "BOUNDARY_TOUCHES", lyr, "", "NEW_SELECTION")
+
+# Build another search cursor to grab the zip values out of lyr...
+    txtSearch = arcpy.SearchCursor(lyr, "", "", "ZIP")
+    outFile.write("Zip Code:  " + str(fcRow.getValue("ZIP")) + "\n")
+    for txtRow in txtSearch:
+        zval = str(txtRow.getValue("ZIP"))
+        outFile.write(zval + "\n")
+
+outFile.close()    # This closes the text file
+del input, lyr, fcRow, txtRow, txtSearch, fcSearch, outFile, zval
+
