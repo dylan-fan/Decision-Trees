@@ -1,6 +1,6 @@
 void oblivDec(void* args);
 
 typedef struct {
-    int data;
+    File *data;
     int result;
 } ProtocolIO;
