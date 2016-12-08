@@ -38,7 +38,7 @@ int main()
             printf("Establishing parties...\n");
             currentParty = (argv[2][0] =='1'?1:2);
             setCurrentParty(&pd, currentParty);
-            dec->data = argv[3];
+            dec->filename = argv[3];
             
             printf("Executing Yao's Protocol...\n");
             time_t start, end;

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include "dec.oh"
 #include "dec.h"
 #include "../lib/absentminded-crypto-kit/src/obig.oh"
@@ -127,7 +128,7 @@ void calculateEntropy()
     for(int i=0;i<collect_attrib[collect_attrib.size()-1].attribs.size();i++){
         attrib *tempAttrib=&collect_attrib[collect_attrib.size()-1].attribs[i];
         double quotient = (double)(tempAttrib->count)/matrix.size();
-        Entropy += -(quotient*(log2(quotient)));
+        Entropy += - oblivMul(quotient, (log2(quotient)), );
     }
     entropy=Entropy;
 }
@@ -200,6 +201,7 @@ void oblivDec(void *args)
 	ProtocolIO *dec = (ProtocolIO*)args;
 
 	printf("beginning obig initiation...\n");
+	int i=0; int j=0;
 
 	obig oa;
 	obig_init(&oa, 16);
@@ -207,23 +209,34 @@ void oblivDec(void *args)
 	obig_init(&ob, 16);
 	obig oc;
 	obig_init(&oc, 64);
-
+	File *f1, *f2;
 	printf("obig initiation successful.\n");
-
-	obliv int n1 = feedOblivInt(dec->data, 1);
-	obliv int n2 = feedOblivInt(dec->data, 2);
-	obliv int n3 = 0;
-
+	byte buf[4096];
+	size_t len = 0;
+	char *n1 = feedOblivInt(dec->filename, 1);
+	char *n2 = feedOblivInt(dec->filename, 2);
+	//obliv int n3 = 0;
+	f1= fopen(n1, "r");
+	f2= fopen(n2, "r");
+	while ((read = getline(&buf, &len, f1)) != -1) {
+        char * line = strtok(strdup(buf), ",");
+		while(line) {
+			matrix[i][j]= strcpy(line);
+   			line  = strtok(NULL, ",");
+   			j++;
+		}
+		i++;
+    }
 	printf("obliv feed successful\n");
 
-	obig_import_onative(&oa, n1);
-	obig_import_onative(&ob, n2);
-	obig_import_onative(&oc, n3);
+	//obig_import_onative(&oa, n1);
+	//obig_import_onative(&ob, n2);
+	//obig_import_onative(&oc, n3);
 
 	printf("obig import successful\n");
 
 //	obig_mul(&oc, oa, ob);
-	tree tr(rows, columns, "adult.data");
+	tree tr(rows, columns, );
 
 	printf("oblivious decision tree successful\n");
 
