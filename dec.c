@@ -1,16 +1,17 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <math.h>
+#include <obliv.h>
 #include <time.h>
+#include "dec.h"
 
 #define ROWS 500
 #define COLUMNS 10
 
-
-
-int main()
+int main (int argc, char *argv[])
 {
-    int main (int argc, char *argv[]) {
+time_t start, end;
         printf("Oblivious Distributed ID3\n");
         printf("================================\n");
         
@@ -41,13 +42,13 @@ int main()
             dec->filename = argv[3];
             
             printf("Executing Yao's Protocol...\n");
-            time_t start, end;
+            
         	start=clock();
             execYaoProtocol(&pd, oblivDec, dec);
             end=clock();
             cleanupProtocol(&pd);
                       
-            printf("Oblivious ID3 produced: %d\n", mul->result);
+            printf("Oblivious ID3 produced: %d\n", dec->result);
             free(dec);
         }
         else {
@@ -56,7 +57,7 @@ int main()
                    "\tlocal -> 'localhost' remote -> IP address or DNS name\n", argv[0]);
         }
                        
-        printf("Time required for execution:" (end - start)/CLOCKS_PER_SEC,"seconds");
+        printf("Time required for execution:", (end - start)/CLOCKS_PER_SEC ,"seconds");
         return 0;
         
     }
