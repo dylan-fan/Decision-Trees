@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <obliv.h>
 #include <string.h>
+#include <time.h>
 #include "multiplication.h"
 
 int main (int argc, char *argv[]) {
+	time_t start, end;
 	printf("Big-Int Oblivious Multiplication\n");
 	printf("================================\n");
 
@@ -35,7 +37,9 @@ int main (int argc, char *argv[]) {
 		mul->data = atoi(argv[3]);
 
 		printf("Executing Yao's Protocol...\n");
+		start=clock(); 
 		execYaoProtocol(&pd, oblivMul, mul);
+		end=clock();
 		cleanupProtocol(&pd);
 
 		printf("Oblivious Multiplication produced: %d\n", mul->result);
@@ -46,7 +50,7 @@ int main (int argc, char *argv[]) {
 	    "\tHostname usage:\n"
 		"\tlocal -> 'localhost' remote -> IP address or DNS name\n", argv[0]);
 	}
-
+	printf("Time required for execution:", (end - start)/CLOCKS_PER_SEC ,"seconds");
 	return 0;
 
 }
